@@ -1,0 +1,36 @@
+# import our package for serial communication
+from cvzone.SerialModule import SerialObject
+
+#import our computer vision module 
+import cv2
+
+#import our Face detector module
+from cvzone.FaceDetectionModule import FaceDetector
+
+# start our camera 
+cap = cv2.VideoCapture(0)
+
+# setup our serial communication over COM port 3
+arduino = SerialObject("COM3")
+
+# creating object for our face detector module 
+detector = FaceDetector(minDetectionCon=0.8)
+
+while 1:
+    success, image = cap.read()    # reading web cam 
+    image, bboxInfo = detector.findFaces(image)
+    
+    # runs if a face is detected 
+    if bboxInfo:
+        arduino.sendData([0, 1, 0])
+        print("Face Detected")
+        
+    # runs if no face detected
+    else:
+        arduino.sendData([1, 0, 0])
+        print("No faces Detected")
+  
+  # show our image 
+    cv2.imshow('image',image)
+    if cv2.waitKey(1) == ord('p'):
+        break
