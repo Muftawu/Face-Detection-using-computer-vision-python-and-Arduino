@@ -1,0 +1,20 @@
+#include "cvzone.h"    // a cvzone package for serial communication 
+SerialData data(3,1);   // initialize values to get our data from python
+int values[3];               // number of values received
+
+void setup () {
+  data.begin(9600);     // setup serial communication
+  pinMode(2,OUTPUT);      // set our RED LEDs as output
+  pinMode(4,OUTPUT);      // set our GREEN LEDs as output
+  pinMode(6,OUTPUT);      // set our BLUE LEDs as output
+  digitalWrite(2,LOW);     // turn off our RED LED
+  digitalWrite(4,LOW);     // turn off our GREEN LED
+  digitalWrite(6,LOW);      // turn off our  BLUE LED
+}
+
+void loop () {
+  data.Get(values);      // read our value from python 
+  digitalWrite(2,values[0]);   // turn on or off the led using the value received
+  digitalWrite(4,values[1]);
+  digitalWrite(6,values[2]);
+}
